@@ -1,0 +1,17 @@
+{
+  "name": "firebase-vision",
+  "version": "0.1.0",
+  "description": "",
+  "cordova": {
+    "id": "cordova-plugin-firebase-mlvision",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "author": "Rubén Alonso",
+  "license": "MIT"
+}

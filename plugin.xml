@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-firebase-mlvision" version="0.1.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>FirebaseVision</name>
+    <js-module name="FirebaseVision" src="www/firebase-vision.js">
+        <clobbers target="FirebaseVision" />
+    </js-module>
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="FirebaseVision">
+                <param name="ios-package" value="FirebaseVision" />
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+
+        <source-file src="src/ios/FirebaseVision.swift" />
+        <dependency id="cordova-plugin-add-swift-support" version="2.0.2"/>
+
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="Firebase/MLVisionTextModel"/>
+            </pods>
+        </podspec>
+    </platform>
+</plugin>
