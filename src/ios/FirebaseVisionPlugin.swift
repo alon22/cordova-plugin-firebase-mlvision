@@ -2,8 +2,8 @@ import Firebase
 import FirebaseMLVision
 import UIKit
 
-@objc(FirebaseVision)
-class FirebaseVision: CDVPlugin {
+@objc(FirebaseVisionPlugin)
+class FirebaseVisionPlugin: CDVPlugin {
 
     @objc(pluginInitialize)
     override func pluginInitialize() {

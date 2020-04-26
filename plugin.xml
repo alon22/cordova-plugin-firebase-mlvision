@@ -1,19 +1,21 @@
 <?xml version='1.0' encoding='utf-8'?>
 <plugin id="cordova-plugin-firebase-mlvision" version="0.1.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>FirebaseVision</name>
-    <js-module name="FirebaseVision" src="www/firebase-vision.js">
-        <clobbers target="FirebaseVision" />
+
+    <js-module name="FirebaseVisionPlugin" src="www/firebase-vision.js">
+        <clobbers target="FirebaseVisionPlugin" />
     </js-module>
     <platform name="ios">
+        <dependency id="cordova-plugin-add-swift-support" version="2.0.2"/>
+
         <config-file target="config.xml" parent="/*">
-            <feature name="FirebaseVision">
-                <param name="ios-package" value="FirebaseVision" />
+            <feature name="FirebaseVisionPlugin">
+                <param name="ios-package" value="FirebaseVisionPlugin" />
                 <param name="onload" value="true" />
             </feature>
         </config-file>
 
-        <source-file src="src/ios/FirebaseVision.swift" />
-        <dependency id="cordova-plugin-add-swift-support" version="2.0.2"/>
+        <source-file src="src/ios/FirebaseVisionPlugin.swift" />
 
         <podspec>
             <config>
@@ -23,5 +25,30 @@
                 <pod name="Firebase/MLVisionTextModel"/>
             </pods>
         </podspec>
+    </platform>
+
+    <platform name="android">
+        <dependency id="cordova-plugin-androidx" version="^1.0.2" />
+        <dependency id="cordova-plugin-androidx-adapter" version="^1.1.0" />
+
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="FirebaseVisionPlugin">
+                <param name="android-package" value="by.alon22.cordova.firebase.FirebaseVisionPlugin" />
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <meta-data
+                android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+                android:value="ocr" />
+        </config-file>
+
+        <source-file src="src/android/FirebaseVisionPlugin.java" target-dir="by/alon22/cordova/firebase"/>
+
+        <preference name="FIREBASE_MLVISION_VERSION" default="24.0.+"/>
+
+        <framework src="com.google.firebase:firebase-ml-vision:$FIREBASE_MLVISION_VERSION" />
+
     </platform>
 </plugin>
