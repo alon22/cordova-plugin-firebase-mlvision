@@ -10,8 +10,8 @@ class FirebaseVisionPlugin: CDVPlugin {
         FirebaseApp.configure()
     }
 
-    @objc(onDeviceRecognizeImage:)
-    func onDeviceRecognizeImage(command: CDVInvokedUrlCommand) {
+    @objc(onDeviceTextRecognizer:)
+    func onDeviceTextRecognizer(command: CDVInvokedUrlCommand) {
         guard let imageURL = command.arguments.first as? String else {
             let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Image URL required")
             self.commandDelegate.send(pluginResult, callbackId: command.callbackId)

@@ -1,5 +1,5 @@
 var exec = require('cordova/exec');
 
-exports.onDeviceRecognizeImage = function (image, success, error) {
-    exec(success, error,'FirebaseVisionPlugin', 'onDeviceRecognizeImage', [image])
+exports.onDeviceTextRecognizer = function (image, success, error) {
+    exec(success, error,'FirebaseVisionPlugin', 'onDeviceTextRecognizer', [image])
 }

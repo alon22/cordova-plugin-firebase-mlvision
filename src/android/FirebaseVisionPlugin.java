@@ -35,7 +35,6 @@ import androidx.annotation.NonNull;
  */
 public class FirebaseVisionPlugin extends CordovaPlugin {
 
-    CallbackContext callbackContext;
     protected static Context applicationContext = null;
     private static Activity cordovaActivity = null;
     private FirebaseVision firebaseVision;
@@ -56,15 +55,15 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (action.equals("onDeviceRecognizeImage")) {
+        if (action.equals("onDeviceTextRecognizer")) {
             String message = args.getString(0);
-            this.onDeviceRecognizeImage(message, callbackContext);
+            this.onDeviceTextRecognizer(message, callbackContext);
             return true;
         }
         return false;
     }
 
-    private void onDeviceRecognizeImage(String message, CallbackContext callbackContext) {
+    private void onDeviceTextRecognizer(String message, CallbackContext callbackContext) {
         if (message != null && message.length() > 0) {
             try {
                 Uri uri = Uri.parse(message);
@@ -80,7 +79,7 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                callbackContext.error(e.getMessage());
+                                callbackContext.error(e.getLocalizedMessage());
                             }
                         });
             } catch (Exception e) {
@@ -88,49 +87,6 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
             }
         } else {
             callbackContext.error("Expected one non-empty string argument.");
-        }
-
-    }
-
-    public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            String stringUrl = strings[0];
-            try {
-                URL url = new URL(stringUrl);
-                HttpURLConnection connection = (HttpURLConnection) url
-                        .openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                return myBitmap;
-            } catch (Exception e) {
-                callbackContext.error(e.getLocalizedMessage());
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            if (bitmap != null) {
-                FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
-                FirebaseVisionTextRecognizer recognizer = firebaseVision.getOnDeviceTextRecognizer();
-                recognizer.processImage(image)
-                        .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
-                            @Override
-                            public void onSuccess(FirebaseVisionText firebaseVisionText) {
-                                callbackContext.success(firebaseVisionText.getText());
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                callbackContext.error(e.getMessage());
-                            }
-                        });
-            }
         }
     }
 }
