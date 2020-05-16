@@ -2,15 +2,14 @@ package by.alon22.cordova.firebase;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
@@ -20,13 +19,7 @@ import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 
@@ -59,6 +52,10 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
             String message = args.getString(0);
             this.onDeviceTextRecognizer(message, callbackContext);
             return true;
+        } else if (action.equals("barcodeDetector")) {
+            String message = args.getString(0);
+            this.barcodeDetector(message, callbackContext);
+            return true;
         }
         return false;
     }
@@ -74,6 +71,38 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
                             @Override
                             public void onSuccess(FirebaseVisionText firebaseVisionText) {
                                 callbackContext.success(firebaseVisionText.getText());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                callbackContext.error(e.getLocalizedMessage());
+                            }
+                        });
+            } catch (Exception e) {
+                callbackContext.error(e.getLocalizedMessage());
+            }
+        } else {
+            callbackContext.error("Expected one non-empty string argument.");
+        }
+    }
+
+    private void barcodeDetector(String message, CallbackContext callbackContext) {
+        if (message != null && message.length() > 0) {
+            try {
+                Uri uri = Uri.parse(message);
+                FirebaseVisionImage image = FirebaseVisionImage.fromFilePath(applicationContext, uri);
+                FirebaseVisionBarcodeDetector detector = firebaseVision.getVisionBarcodeDetector();
+                detector.detectInImage(image)
+                        .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
+                            @Override
+                            public void onSuccess(List<FirebaseVisionBarcode> firebaseVisionBarcodes) {
+                                try {
+                                    JSONArray barcodes = FirebaseUtils.parseBarcode(firebaseVisionBarcodes);
+                                    callbackContext.success(barcodes);
+                                } catch (Exception e) {
+                                    callbackContext.error(e.getLocalizedMessage());
+                                }
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {

@@ -16,6 +16,7 @@
         </config-file>
 
         <source-file src="src/ios/FirebaseVisionPlugin.swift" />
+        <source-file src="src/ios/FirebaseExtensions.swift" />
 
         <podspec>
             <config>
@@ -23,6 +24,7 @@
             </config>
             <pods use-frameworks="true">
                 <pod name="Firebase/MLVisionTextModel"/>
+                <pod name="Firebase/MLVisionBarcodeModel"/>
             </pods>
         </podspec>
     </platform>
@@ -41,14 +43,18 @@
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <meta-data
                 android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-                android:value="ocr" />
+                android:value="ocr,barcode" />
         </config-file>
 
         <source-file src="src/android/FirebaseVisionPlugin.java" target-dir="by/alon22/cordova/firebase"/>
+        <source-file src="src/android/FirebaseUtils.java" target-dir="by/alon22/cordova/firebase"/>
 
-        <preference name="FIREBASE_MLVISION_VERSION" default="24.0.+"/>
+        <preference name="FIREBASE_MLVISION_VERSION" default="24.+"/>
+        <preference name="FIREBASE_MLVISION_BARCODE_MODEL" default="16.+"/>
 
         <framework src="com.google.firebase:firebase-ml-vision:$FIREBASE_MLVISION_VERSION" />
+        <framework src="com.google.firebase:firebase-ml-vision-barcode-model:$FIREBASE_MLVISION_BARCODE_MODEL" />
+}
 
     </platform>
 </plugin>
