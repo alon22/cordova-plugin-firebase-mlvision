@@ -60,8 +60,8 @@ extension VisionBarcode {
                 "organizer": calendarEvent.organizer as Any,
                 "status": calendarEvent.status as Any,
                 "summary": calendarEvent.summary as Any,
-                "start": calendarEvent.start as Any,
-                "end": calendarEvent.end as Any
+                "start": calendarEvent.start?.toISOString() as Any,
+                "end": calendarEvent.end?.toISOString() as Any
             ]
         }
 
@@ -113,5 +113,13 @@ extension VisionBarcode {
             ]
         }
         return response
+    }
+}
+
+extension Date {
+    func toISOString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+        return formatter.string(from: self)
     }
 }

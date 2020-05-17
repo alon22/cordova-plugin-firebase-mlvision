@@ -8,6 +8,7 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 
@@ -77,8 +78,8 @@ public class FirebaseUtils {
                 calendarEvent.put("organizer", barcode.getCalendarEvent().getOrganizer());
                 calendarEvent.put("status", barcode.getCalendarEvent().getStatus());
                 calendarEvent.put("summary", barcode.getCalendarEvent().getSummary());
-                calendarEvent.put("start", barcode.getCalendarEvent().getStart());
-                calendarEvent.put("end", barcode.getCalendarEvent().getEnd());
+                calendarEvent.put("start", toISOString(barcode.getCalendarEvent().getStart()));
+                calendarEvent.put("end", toISOString(barcode.getCalendarEvent().getEnd()));
                 barcodeMap.put("calendarEvent", calendarEvent);
             }
 
@@ -169,5 +170,10 @@ public class FirebaseUtils {
             array.put(pointMap);
         }
         return array;
+    }
+
+    private static String toISOString(FirebaseVisionBarcode.CalendarDateTime date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z");
+        return dateFormat.format(date);
     }
 }
