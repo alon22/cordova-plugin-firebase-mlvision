@@ -6,7 +6,7 @@ Cordova plugin for Firebase MLKit Vision
 # Installation
 Run:
 ```
-cordova plugin add cordova-plugin-firebase-vision --save
+cordova plugin add cordova-plugin-firebase-mlvision --save
 ```
 
 # Setup
