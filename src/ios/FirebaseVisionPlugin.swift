@@ -30,7 +30,7 @@ class FirebaseVisionPlugin: CDVPlugin {
                         let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: error.localizedDescription)
                         self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
                     } else {
-                        let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: text?.text)
+                        let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: text?.toJSON())
                         self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
                     }
                 }

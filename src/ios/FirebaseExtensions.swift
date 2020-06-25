@@ -1,5 +1,41 @@
 import FirebaseMLVision
 
+extension VisionText {
+    func toJSON() -> [AnyHashable: Any] {
+        let blocksParsed = blocks.compactMap { (block) -> Any? in
+            let lines = block.lines.compactMap { (line) -> Any? in
+                let elements = line.elements.compactMap { (element) -> Any? in
+                    return [
+                        "cornerPoints": element.cornerPoints?.toJSON() as Any,
+                        "text": element.text,
+                        "frame": element.frame.toJSON() as Any,
+                        "recognizedLanguages": element.recognizedLanguages.compactMap({$0.languageCode})
+                    ]
+                }
+                return [
+                    "cornerPoints": line.cornerPoints?.toJSON() as Any,
+                    "text": line.text,
+                    "frame": line.frame.toJSON() as Any,
+                    "recognizedLanguages": line.recognizedLanguages.compactMap({$0.languageCode}),
+                    "elements": elements
+                ]
+            }
+            return [
+                "cornerPoints": block.cornerPoints?.toJSON() as Any,
+                "text": block.text,
+                "frame": block.frame.toJSON() as Any,
+                "recognizedLanguages": block.recognizedLanguages.compactMap({$0.languageCode}),
+                "lines": lines
+            ]
+        }
+
+        return [
+            "text": text,
+            "blocks": blocksParsed
+        ]
+    }
+}
+
 extension VisionBarcode {
     func toJSON() -> [AnyHashable: Any] {
         var response = [
@@ -7,12 +43,7 @@ extension VisionBarcode {
             "format": format.rawValue,
             "rawValue" : rawValue as Any,
             "displayValue" : displayValue as Any,
-            "cornerPoints" : cornerPoints?.compactMap({
-                [
-                    "x" : ($0 as! CGPoint).x,
-                    "y" : ($0 as! CGPoint).y
-                ]
-            }) as Any,
+            "cornerPoints" : cornerPoints?.toJSON() as Any,
         ]
         if let email = email {
             response["email"] = [
@@ -121,5 +152,27 @@ extension Date {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
         return formatter.string(from: self)
+    }
+}
+
+extension CGRect {
+    func toJSON() -> [AnyHashable: Any] {
+        return [
+            "x" : origin.x,
+            "y" : origin.y,
+            "width": size.width,
+            "height": size.height
+        ]
+    }
+}
+
+extension Array where Element: NSValue {
+    func toJSON() -> [[AnyHashable: Any]] {
+        return self.compactMap({
+            [
+                "x" : ($0 as! CGPoint).x,
+                "y" : ($0 as! CGPoint).y
+            ]
+        })
     }
 }

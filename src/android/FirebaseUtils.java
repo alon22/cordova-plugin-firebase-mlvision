@@ -1,9 +1,11 @@
 package by.alon22.cordova.firebase;
 
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.text.TextUtils;
 
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
+import com.google.firebase.ml.vision.text.FirebaseVisionText;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,6 +15,44 @@ import java.util.List;
 
 
 public class FirebaseUtils {
+    public static JSONObject parseText(FirebaseVisionText text) throws Exception {
+        JSONArray blocks = new JSONArray();
+        for (FirebaseVisionText.TextBlock textBlock : text.getTextBlocks()) {
+            JSONArray lines = new JSONArray();
+            for (FirebaseVisionText.Line line : textBlock.getLines()) {
+                JSONArray elements = new JSONArray();
+                for (FirebaseVisionText.Element element : line.getElements()) {
+                    JSONObject elementObject = new JSONObject();
+                    elementObject.put("cornerPoints", parsePoints(element.getCornerPoints()));
+                    elementObject.put("text", element.getText());
+                    elementObject.put("frame", parseBoundingBox(element.getBoundingBox()));
+                    elementObject.put("recognizedLanguages", element.getRecognizedLanguages());
+                    elements.put(elementObject);
+                }
+                JSONObject lineObject = new JSONObject();
+                lineObject.put("cornerPoints", parsePoints(line.getCornerPoints()));
+                lineObject.put("text", line.getText());
+                lineObject.put("frame", parseBoundingBox(line.getBoundingBox()));
+                lineObject.put("recognizedLanguages", line.getRecognizedLanguages());
+                lineObject.put("elements", elements);
+                lines.put(lineObject);
+            }
+            JSONObject block = new JSONObject();
+            block.put("cornerPoints", parsePoints(textBlock.getCornerPoints()));
+            block.put("text", textBlock.getText());
+            block.put("frame", parseBoundingBox(textBlock.getBoundingBox()));
+            block.put("recognizedLanguages", textBlock.getRecognizedLanguages());
+            block.put("lines", lines);
+            blocks.put(block);
+        }
+
+        JSONObject result = new JSONObject();
+        result.put("text", text.getText());
+        result.put("blocks", blocks);
+
+        return result;
+    }
+
     public static JSONArray parseBarcode(List<FirebaseVisionBarcode> barcodes) throws Exception {
         JSONArray array = new JSONArray();
         for (FirebaseVisionBarcode barcode : barcodes) {
@@ -170,6 +210,16 @@ public class FirebaseUtils {
             array.put(pointMap);
         }
         return array;
+    }
+
+    private static JSONObject parseBoundingBox(Rect rect) throws Exception {
+        JSONObject rectMap = new JSONObject();
+        rectMap.put("x", rect.left);
+        rectMap.put("y", rect.top);
+        rectMap.put("width", rect.width());
+        rectMap.put("height", rect.height());
+
+        return rectMap;
     }
 
     private static String toISOString(FirebaseVisionBarcode.CalendarDateTime date) {
