@@ -1,19 +1,19 @@
-import FirebaseMLVision
+import MLKitTextRecognition
+import MLKitBarcodeScanning
 
-extension VisionText {
+extension Text {
     func toJSON() -> [AnyHashable: Any] {
         let blocksParsed = blocks.compactMap { (block) -> Any? in
             let lines = block.lines.compactMap { (line) -> Any? in
                 let elements = line.elements.compactMap { (element) -> Any? in
                     return [
-                        "cornerPoints": element.cornerPoints?.toJSON() as Any,
+                        "cornerPoints": element.cornerPoints.toJSON() as Any,
                         "text": element.text,
-                        "frame": element.frame.toJSON() as Any,
-                        "recognizedLanguages": element.recognizedLanguages.compactMap({$0.languageCode})
+                        "frame": element.frame.toJSON() as Any
                     ]
                 }
                 return [
-                    "cornerPoints": line.cornerPoints?.toJSON() as Any,
+                    "cornerPoints": line.cornerPoints.toJSON() as Any,
                     "text": line.text,
                     "frame": line.frame.toJSON() as Any,
                     "recognizedLanguages": line.recognizedLanguages.compactMap({$0.languageCode}),
@@ -21,7 +21,7 @@ extension VisionText {
                 ]
             }
             return [
-                "cornerPoints": block.cornerPoints?.toJSON() as Any,
+                "cornerPoints": block.cornerPoints.toJSON() as Any,
                 "text": block.text,
                 "frame": block.frame.toJSON() as Any,
                 "recognizedLanguages": block.recognizedLanguages.compactMap({$0.languageCode}),
@@ -36,7 +36,7 @@ extension VisionText {
     }
 }
 
-extension VisionBarcode {
+extension Barcode {
     func toJSON() -> [AnyHashable: Any] {
         var response = [
             "valueType": valueType.rawValue,

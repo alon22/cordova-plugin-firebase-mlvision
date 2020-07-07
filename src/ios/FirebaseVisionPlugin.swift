@@ -1,14 +1,10 @@
-import Firebase
-import FirebaseMLVision
+import MLKitTextRecognition
+import MLKitBarcodeScanning
+import MLKitVision
 import UIKit
 
 @objc(FirebaseVisionPlugin)
 class FirebaseVisionPlugin: CDVPlugin {
-
-    @objc(pluginInitialize)
-    override func pluginInitialize() {
-        FirebaseApp.configure()
-    }
 
     @objc(onDeviceTextRecognizer:)
     func onDeviceTextRecognizer(command: CDVInvokedUrlCommand) {
@@ -22,8 +18,7 @@ class FirebaseVisionPlugin: CDVPlugin {
                 let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: error.localizedDescription)
                 self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
             } else {
-                let vision = Vision.vision()
-                let textRecognizer = vision.onDeviceTextRecognizer()
+                let textRecognizer = TextRecognizer.textRecognizer()
                 let visionImage = VisionImage(image: image!)
                 textRecognizer.process(visionImage) { (text, error) in
                     if let error = error {
@@ -50,10 +45,9 @@ class FirebaseVisionPlugin: CDVPlugin {
                 let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: error.localizedDescription)
                 self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
             } else {
-                let vision = Vision.vision()
-                let barcodeDetector = vision.barcodeDetector()
+                let barcodeDetector = BarcodeScanner.barcodeScanner()
                 let visionImage = VisionImage(image: image!)
-                barcodeDetector.detect(in: visionImage) { (barcodes, error) in
+                barcodeDetector.process(visionImage) { (barcodes, error) in
                     if let error = error {
                         let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: error.localizedDescription)
                         self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
@@ -69,7 +63,7 @@ class FirebaseVisionPlugin: CDVPlugin {
 
     private func getImage(imageURL: String, _ completion: @escaping (_ image: UIImage?, _ error: Error?) -> Void) {
         guard let url = URL(string: imageURL) else {
-            let error = NSError(domain: "cordova-plugin-firabse-mlvision",
+            let error = NSError(domain: "cordova-plugin-firebase-mlvision",
                                 code: -1,
                                 userInfo: [NSLocalizedDescriptionKey : "URLImageError"])
             completion(nil, error)
@@ -80,7 +74,7 @@ class FirebaseVisionPlugin: CDVPlugin {
                 completion(nil, error)
             } else {
                 guard let data = data, let image = UIImage(data: data) else {
-                    let error = NSError(domain: "cordova-plugin-firabse-mlvision",
+                    let error = NSError(domain: "cordova-plugin-firebase-mlvision",
                                         code: -1,
                                         userInfo: [NSLocalizedDescriptionKey : "DownloadImageError"])
                     completion(nil, error)

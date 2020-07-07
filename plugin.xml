@@ -23,8 +23,8 @@
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="Firebase/MLVisionTextModel"/>
-                <pod name="Firebase/MLVisionBarcodeModel"/>
+                <pod name="GoogleMLKit/TextRecognition"/>
+                <pod name="GoogleMLKit/BarcodeScanning"/>
             </pods>
         </podspec>
     </platform>
