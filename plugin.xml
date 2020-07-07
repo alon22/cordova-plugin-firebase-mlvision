@@ -42,8 +42,8 @@
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <meta-data
-                android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-                android:value="ocr,barcode" />
+                android:name="com.google.mlkit.vision.DEPENDENCIES"
+                android:value="ocr" />
         </config-file>
 
         <source-file src="src/android/FirebaseVisionPlugin.java" target-dir="by/alon22/cordova/firebase"/>
@@ -51,11 +51,10 @@
 
         <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
 
-        <preference name="FIREBASE_MLVISION_VERSION" default="24.+"/>
-        <preference name="FIREBASE_MLVISION_BARCODE_MODEL" default="16.+"/>
+        <preference name="MKLKIT_VERSION" default="16.0.0"/>
 
-        <framework src="com.google.firebase:firebase-ml-vision:$FIREBASE_MLVISION_VERSION" />
-        <framework src="com.google.firebase:firebase-ml-vision-barcode-model:$FIREBASE_MLVISION_BARCODE_MODEL" />
+        <framework src="com.google.android.gms:play-services-mlkit-text-recognition:$MKLKIT_VERSION"/>
+        <framework src="com.google.mlkit:barcode-scanning:$MKLKIT_VERSION"/>
 
     </platform>
 </plugin>

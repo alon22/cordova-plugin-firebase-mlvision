@@ -6,13 +6,13 @@ import android.net.Uri;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.ml.vision.FirebaseVision;
-import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
-import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
-import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-import com.google.firebase.ml.vision.text.FirebaseVisionText;
-import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
+import com.google.mlkit.vision.barcode.Barcode;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -31,20 +31,12 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
 
     protected static Context applicationContext = null;
     private static Activity cordovaActivity = null;
-    private FirebaseVision firebaseVision;
 
     @Override
     protected void pluginInitialize() {
         super.pluginInitialize();
         cordovaActivity = this.cordova.getActivity();
         applicationContext = cordovaActivity.getApplicationContext();
-        this.cordova.getThreadPool().execute(new Runnable() {
-            @Override
-            public void run() {
-                FirebaseApp.initializeApp(applicationContext);
-                firebaseVision = FirebaseVision.getInstance();
-            }
-        });
     }
 
     @Override
@@ -65,12 +57,12 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
         if (message != null && message.length() > 0) {
             try {
                 Uri uri = Uri.parse(message);
-                FirebaseVisionImage image = FirebaseVisionImage.fromFilePath(applicationContext, uri);
-                FirebaseVisionTextRecognizer recognizer = firebaseVision.getOnDeviceTextRecognizer();
-                recognizer.processImage(image)
-                        .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
+                InputImage image = InputImage.fromFilePath(applicationContext, uri);
+                TextRecognizer recognizer = TextRecognition.getClient();
+                recognizer.process(image)
+                        .addOnSuccessListener(new OnSuccessListener<Text>() {
                             @Override
-                            public void onSuccess(FirebaseVisionText firebaseVisionText) {
+                            public void onSuccess(Text firebaseVisionText) {
                                 try {
                                     JSONObject text = FirebaseUtils.parseText(firebaseVisionText);
                                     callbackContext.success(text);
@@ -97,12 +89,12 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
         if (message != null && message.length() > 0) {
             try {
                 Uri uri = Uri.parse(message);
-                FirebaseVisionImage image = FirebaseVisionImage.fromFilePath(applicationContext, uri);
-                FirebaseVisionBarcodeDetector detector = firebaseVision.getVisionBarcodeDetector();
-                detector.detectInImage(image)
-                        .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
+                InputImage image = InputImage.fromFilePath(applicationContext, uri);
+                BarcodeScanner detector = BarcodeScanning.getClient();
+                detector.process(image)
+                        .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                             @Override
-                            public void onSuccess(List<FirebaseVisionBarcode> firebaseVisionBarcodes) {
+                            public void onSuccess(List<Barcode> firebaseVisionBarcodes) {
                                 try {
                                     JSONArray barcodes = FirebaseUtils.parseBarcode(firebaseVisionBarcodes);
                                     callbackContext.success(barcodes);
