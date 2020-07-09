@@ -1,4 +1,4 @@
-cordova-plugin-firebase-vision
+cordova-plugin-firebase-mlvision
 ========================
 
 Cordova plugin for Firebase MLKit Vision
@@ -9,32 +9,6 @@ Cordova plugin for Firebase MLKit Vision
 Run:
 ```
 cordova plugin add cordova-plugin-firebase-mlvision --save
-```
-
-# Setup
-Place your Firebase configuration files, GoogleService-Info.plist for iOS and google-services.json for android, in the root folder of your cordova project.
-
-```
-- My Project/
-    platforms/
-    plugins/
-    www/
-    config.xml
-    google-services.json       <--
-    GoogleService-Info.plist   <--
-    ...
-```
-
-Add this lines in your config.xml
-```xml
-    <platform name="android">
-        ...
-        <resource-file src="google-services.json" target="app/google-services.json" />
-    </platform>
-    <platform name="ios">
-        ...
-        <resource-file src="GoogleService-Info.plist" />
-    </platform>
 ```
 
 # Usage
