@@ -30,8 +30,8 @@
     </platform>
 
     <platform name="android">
-        <dependency id="cordova-plugin-androidx" version="^1.0.2" />
-        <dependency id="cordova-plugin-androidx-adapter" version="^1.1.0" />
+        <dependency id="cordova-plugin-androidx" version="^2.0.0" />
+        <dependency id="cordova-plugin-androidx-adapter" version="^1.1.1" />
 
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="FirebaseVisionPlugin">
@@ -51,8 +51,8 @@
 
         <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
 
-        <preference name="FIREBASE_MLVISION_VERSION" default="24.+"/>
-        <preference name="FIREBASE_MLVISION_BARCODE_MODEL" default="16.+"/>
+        <preference name="FIREBASE_MLVISION_VERSION" default="24.0.3"/>
+        <preference name="FIREBASE_MLVISION_BARCODE_MODEL" default="16.0.1"/>
 
         <framework src="com.google.firebase:firebase-ml-vision:$FIREBASE_MLVISION_VERSION" />
         <framework src="com.google.firebase:firebase-ml-vision-barcode-model:$FIREBASE_MLVISION_BARCODE_MODEL" />
