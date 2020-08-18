@@ -9,6 +9,7 @@ Cordova plugin for Firebase MLKit Vision
 Run:
 ```
 cordova plugin add cordova-plugin-firebase-mlvision --save
+npm install @ionic-native/firebase-vision --save
 ```
 
 # Setup
