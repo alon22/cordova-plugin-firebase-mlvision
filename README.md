@@ -46,3 +46,10 @@ FirebaseVisionPlugin.barcodeDetector(FILE_URI,
 |Image labeling| | |
 |Object detection & tracking| | |
 |Landmark recognition| | |
+
+# Know Issues
+## iOS
+Build iOS from command line failed in
+`PhaseScriptExecution [CP] Copy Pods Resources`
+
+Running from Xcode work correctly
