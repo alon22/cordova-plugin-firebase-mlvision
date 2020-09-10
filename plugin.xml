@@ -49,8 +49,6 @@
         <source-file src="src/android/FirebaseVisionPlugin.java" target-dir="by/alon22/cordova/firebase"/>
         <source-file src="src/android/FirebaseUtils.java" target-dir="by/alon22/cordova/firebase"/>
 
-        <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
-
         <preference name="MKLKIT_VERSION" default="16.0.0"/>
 
         <framework src="com.google.android.gms:play-services-mlkit-text-recognition:$MKLKIT_VERSION"/>
