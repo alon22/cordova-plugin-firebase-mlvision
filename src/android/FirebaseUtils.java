@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.text.TextUtils;
 
 import com.google.mlkit.vision.barcode.Barcode;
+import com.google.mlkit.vision.label.ImageLabel;
 import com.google.mlkit.vision.text.Text;
 
 import org.json.JSONArray;
@@ -53,7 +54,7 @@ public class FirebaseUtils {
         return result;
     }
 
-    public static JSONArray parseBarcode(List<Barcode> barcodes) throws Exception {
+    public static JSONArray parseBarcodes(List<Barcode> barcodes) throws Exception {
         JSONArray array = new JSONArray();
         for (Barcode barcode : barcodes) {
 
@@ -155,6 +156,20 @@ public class FirebaseUtils {
             }
 
             array.put(barcodeMap);
+        }
+        return array;
+    }
+
+    public static JSONArray parseImageLabels(List<ImageLabel> imageLabels) throws Exception {
+        JSONArray array = new JSONArray();
+        for (ImageLabel imageLabel : imageLabels) {
+
+            JSONObject imageLabelMap = new JSONObject();
+            imageLabelMap.put("text", imageLabel.getText());
+            imageLabelMap.put("confidence", imageLabel.getConfidence());
+            imageLabelMap.put("index", imageLabel.getIndex());
+
+            array.put(imageLabelMap);
         }
         return array;
     }

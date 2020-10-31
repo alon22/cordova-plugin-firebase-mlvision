@@ -10,6 +10,10 @@ import com.google.mlkit.vision.barcode.Barcode;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.label.ImageLabel;
+import com.google.mlkit.vision.label.ImageLabeler;
+import com.google.mlkit.vision.label.ImageLabeling;
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
@@ -48,6 +52,10 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
         } else if (action.equals("barcodeDetector")) {
             String message = args.getString(0);
             this.barcodeDetector(message, callbackContext);
+            return true;
+        } else if (action.equals("imageLabeler")) {
+            String message = args.getString(0);
+            this.imageLabeler(message, callbackContext);
             return true;
         }
         return false;
@@ -96,8 +104,40 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
                             @Override
                             public void onSuccess(List<Barcode> firebaseVisionBarcodes) {
                                 try {
-                                    JSONArray barcodes = FirebaseUtils.parseBarcode(firebaseVisionBarcodes);
+                                    JSONArray barcodes = FirebaseUtils.parseBarcodes(firebaseVisionBarcodes);
                                     callbackContext.success(barcodes);
+                                } catch (Exception e) {
+                                    callbackContext.error(e.getLocalizedMessage());
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                callbackContext.error(e.getLocalizedMessage());
+                            }
+                        });
+            } catch (Exception e) {
+                callbackContext.error(e.getLocalizedMessage());
+            }
+        } else {
+            callbackContext.error("Expected one non-empty string argument.");
+        }
+    }
+
+    private void imageLabeler(String message, CallbackContext callbackContext) {
+        if (message != null && message.length() > 0) {
+            try {
+                Uri uri = Uri.parse(message);
+                InputImage image = InputImage.fromFilePath(applicationContext, uri);
+                ImageLabeler detector = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
+                detector.process(image)
+                        .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
+                            @Override
+                            public void onSuccess(List<ImageLabel> imageLabels) {
+                                try {
+                                    JSONArray imageLabels1 = FirebaseUtils.parseImageLabels(imageLabels);
+                                    callbackContext.success(imageLabels1);
                                 } catch (Exception e) {
                                     callbackContext.error(e.getLocalizedMessage());
                                 }

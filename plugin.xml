@@ -25,6 +25,7 @@
             <pods use-frameworks="true">
                 <pod name="GoogleMLKit/TextRecognition"/>
                 <pod name="GoogleMLKit/BarcodeScanning"/>
+                <pod name="GoogleMLKit/ImageLabeling"/>
             </pods>
         </podspec>
     </platform>
@@ -49,10 +50,13 @@
         <source-file src="src/android/FirebaseVisionPlugin.java" target-dir="by/alon22/cordova/firebase"/>
         <source-file src="src/android/FirebaseUtils.java" target-dir="by/alon22/cordova/firebase"/>
 
-        <preference name="MKLKIT_VERSION" default="16.0.0"/>
+        <preference name="MKLKIT_VERSION_TEXT_RECOGNITION" default="16.1.1"/>
+        <preference name="MKLKIT_VERSION_BARCODE" default="16.0.3"/>
+        <preference name="MKLKIT_VERSION_IMAGE_LABELLING" default="17.0.0"/>
 
-        <framework src="com.google.android.gms:play-services-mlkit-text-recognition:$MKLKIT_VERSION"/>
-        <framework src="com.google.mlkit:barcode-scanning:$MKLKIT_VERSION"/>
+        <framework src="com.google.android.gms:play-services-mlkit-text-recognition:$MKLKIT_VERSION_TEXT_RECOGNITION"/>
+        <framework src="com.google.mlkit:barcode-scanning:$MKLKIT_VERSION_BARCODE"/>
+        <framework src="com.google.mlkit:image-labeling:$MKLKIT_VERSION_IMAGE_LABELLING"/>
 
     </platform>
 </plugin>

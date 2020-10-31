@@ -1,5 +1,6 @@
 import MLKitTextRecognition
 import MLKitBarcodeScanning
+import MLKitImageLabeling
 
 extension Text {
     func toJSON() -> [AnyHashable: Any] {
@@ -144,6 +145,16 @@ extension Barcode {
             ]
         }
         return response
+    }
+}
+
+extension ImageLabel {
+    func toJSON() -> [String: Any] {
+        return [
+            "text": text,
+            "index": index,
+            "confidence": confidence
+        ]
     }
 }
 
