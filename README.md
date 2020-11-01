@@ -37,13 +37,25 @@ FirebaseVisionPlugin.barcodeDetector(FILE_URI,
 })
 ```
 
+## Image Labeler
+```js
+FirebaseVisionPlugin.imageLabeler(FILE_URI,
+    (json) => {
+        console.log(json);
+    },
+    (error) => {
+        console.error(error);;
+    })
+})
+```
+
 # Support
 |   |Android|iOS|
 |---|---|---|
 |Text recognition|X|X|
 |Face detection| | |
 |Barcode scanning|X|X|
-|Image labeling| | |
+|Image labeling|X|X|
 |Object detection & tracking| | |
 |Landmark recognition| | |
 
