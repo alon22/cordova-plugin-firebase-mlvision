@@ -93,27 +93,39 @@ class FirebaseVisionPlugin: CDVPlugin {
     }
 
     private func getImage(imageURL: String, _ completion: @escaping (_ image: UIImage?, _ error: Error?) -> Void) {
-        guard let url = URL(string: imageURL) else {
-            let error = NSError(domain: "cordova-plugin-firebase-mlvision",
-                                code: -1,
-                                userInfo: [NSLocalizedDescriptionKey : "URLImageError"])
-            completion(nil, error)
-            return
-        }
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            if let error = error {
+        if imageURL.contains("data:") {
+            guard let data = Data(base64Encoded: imageURL),
+                  let image = UIImage(data: data) else {
+                let error = NSError(domain: "cordova-plugin-firebase-mlvision",
+                                    code: -1,
+                                    userInfo: [NSLocalizedDescriptionKey : "Base64ImageError"])
                 completion(nil, error)
-            } else {
-                guard let data = data, let image = UIImage(data: data) else {
-                    let error = NSError(domain: "cordova-plugin-firebase-mlvision",
-                                        code: -1,
-                                        userInfo: [NSLocalizedDescriptionKey : "DownloadImageError"])
-                    completion(nil, error)
-                    return
-                }
-                completion(image, nil)
+                return
             }
+            completion(image, nil)
+        } else {
+            guard let url = URL(string: imageURL) else {
+                let error = NSError(domain: "cordova-plugin-firebase-mlvision",
+                                    code: -1,
+                                    userInfo: [NSLocalizedDescriptionKey : "URLImageError"])
+                completion(nil, error)
+                return
+            }
+            URLSession.shared.dataTask(with: url) { (data, response, error) in
+                if let error = error {
+                    completion(nil, error)
+                } else {
+                    guard let data = data, let image = UIImage(data: data) else {
+                        let error = NSError(domain: "cordova-plugin-firebase-mlvision",
+                                            code: -1,
+                                            userInfo: [NSLocalizedDescriptionKey : "DownloadImageError"])
+                        completion(nil, error)
+                        return
+                    }
+                    completion(image, nil)
+                }
+            }
+            .resume()
         }
-        .resume()
     }
 }

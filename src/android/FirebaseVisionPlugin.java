@@ -2,7 +2,10 @@ package by.alon22.cordova.firebase;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Base64;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -64,8 +68,7 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
     private void onDeviceTextRecognizer(String message, CallbackContext callbackContext) {
         if (message != null && message.length() > 0) {
             try {
-                Uri uri = Uri.parse(message);
-                InputImage image = InputImage.fromFilePath(applicationContext, uri);
+                InputImage image = getImage(message);
                 TextRecognizer recognizer = TextRecognition.getClient();
                 recognizer.process(image)
                         .addOnSuccessListener(new OnSuccessListener<Text>() {
@@ -96,8 +99,7 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
     private void barcodeDetector(String message, CallbackContext callbackContext) {
         if (message != null && message.length() > 0) {
             try {
-                Uri uri = Uri.parse(message);
-                InputImage image = InputImage.fromFilePath(applicationContext, uri);
+                InputImage image = getImage(message);
                 BarcodeScanner detector = BarcodeScanning.getClient();
                 detector.process(image)
                         .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
@@ -128,8 +130,7 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
     private void imageLabeler(String message, CallbackContext callbackContext) {
         if (message != null && message.length() > 0) {
             try {
-                Uri uri = Uri.parse(message);
-                InputImage image = InputImage.fromFilePath(applicationContext, uri);
+                InputImage image = getImage(message);
                 ImageLabeler detector = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
                 detector.process(image)
                         .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
@@ -154,6 +155,19 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
             }
         } else {
             callbackContext.error("Expected one non-empty string argument.");
+        }
+    }
+
+    private InputImage getImage(String message) throws IOException {
+        if (message.contains("data:")) {
+            byte[] decodedString = Base64.decode(message, Base64.DEFAULT);
+            Bitmap bitMap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            InputImage image = InputImage.fromBitmap(bitMap, 0);
+            return image;
+        } else {
+            Uri uri = Uri.parse(message);
+            InputImage image = InputImage.fromFilePath(applicationContext, uri);
+            return image;
         }
     }
 }
