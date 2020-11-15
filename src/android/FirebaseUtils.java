@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.text.TextUtils;
 
 import com.google.mlkit.vision.barcode.Barcode;
+import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.label.ImageLabel;
 import com.google.mlkit.vision.text.Text;
 
@@ -16,7 +17,7 @@ import java.util.List;
 
 
 public class FirebaseUtils {
-    public static JSONObject parseText(Text text) throws Exception {
+    public static JSONObject parseText(InputImage image, Text text) throws Exception {
         JSONArray blocks = new JSONArray();
         for (Text.TextBlock textBlock : text.getTextBlocks()) {
             JSONArray lines = new JSONArray();
@@ -50,11 +51,13 @@ public class FirebaseUtils {
         JSONObject result = new JSONObject();
         result.put("text", text.getText());
         result.put("blocks", blocks);
+        result.put("imageWidth", image.getWidth());
+        result.put("imageHeight", image.getHeight());
 
         return result;
     }
 
-    public static JSONArray parseBarcodes(List<Barcode> barcodes) throws Exception {
+    public static JSONArray parseBarcodes(InputImage image, List<Barcode> barcodes) throws Exception {
         JSONArray array = new JSONArray();
         for (Barcode barcode : barcodes) {
 
@@ -65,6 +68,8 @@ public class FirebaseUtils {
             barcodeMap.put("displayValue", barcode.getDisplayValue());
             barcodeMap.put("cornerPoints", parsePoints(barcode.getCornerPoints()));
             barcodeMap.put("boundingBox",barcode.getBoundingBox());
+            barcodeMap.put("imageWidth", image.getWidth());
+            barcodeMap.put("imageHeight", image.getHeight());
 
 
             if (barcode.getEmail() != null) {

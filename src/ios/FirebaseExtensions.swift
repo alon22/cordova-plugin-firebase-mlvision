@@ -1,9 +1,10 @@
 import MLKitTextRecognition
 import MLKitBarcodeScanning
 import MLKitImageLabeling
+import UIKit
 
 extension Text {
-    func toJSON() -> [AnyHashable: Any] {
+    func toJSON(with image: UIImage) -> [AnyHashable: Any] {
         let blocksParsed = blocks.compactMap { (block) -> Any? in
             let lines = block.lines.compactMap { (line) -> Any? in
                 let elements = line.elements.compactMap { (element) -> Any? in
@@ -32,19 +33,23 @@ extension Text {
 
         return [
             "text": text,
-            "blocks": blocksParsed
+            "blocks": blocksParsed,
+            "imageWidth": image.size.width,
+            "imageHeight": image.size.height
         ]
     }
 }
 
 extension Barcode {
-    func toJSON() -> [AnyHashable: Any] {
+    func toJSON(with image: UIImage) -> [AnyHashable: Any] {
         var response = [
             "valueType": valueType.rawValue,
             "format": format.rawValue,
             "rawValue" : rawValue as Any,
             "displayValue" : displayValue as Any,
             "cornerPoints" : cornerPoints?.toJSON() as Any,
+            "imageWidth": image.size.width,
+            "imageHeight": image.size.height
         ]
         if let email = email {
             response["email"] = [

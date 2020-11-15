@@ -75,7 +75,7 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
                             @Override
                             public void onSuccess(Text firebaseVisionText) {
                                 try {
-                                    JSONObject text = FirebaseUtils.parseText(firebaseVisionText);
+                                    JSONObject text = FirebaseUtils.parseText(image, firebaseVisionText);
                                     callbackContext.success(text);
                                 } catch (Exception e) {
                                     callbackContext.error(e.getLocalizedMessage());
@@ -106,7 +106,7 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
                             @Override
                             public void onSuccess(List<Barcode> firebaseVisionBarcodes) {
                                 try {
-                                    JSONArray barcodes = FirebaseUtils.parseBarcodes(firebaseVisionBarcodes);
+                                    JSONArray barcodes = FirebaseUtils.parseBarcodes(image, firebaseVisionBarcodes);
                                     callbackContext.success(barcodes);
                                 } catch (Exception e) {
                                     callbackContext.error(e.getLocalizedMessage());
@@ -160,6 +160,9 @@ public class FirebaseVisionPlugin extends CordovaPlugin {
 
     private InputImage getImage(String message) throws IOException {
         if (message.contains("data:")) {
+            message = message
+                    .replace("data:image/png;base64,", "")
+                    .replace("data:image/jpeg;base64,", "");
             byte[] decodedString = Base64.decode(message, Base64.DEFAULT);
             Bitmap bitMap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             InputImage image = InputImage.fromBitmap(bitMap, 0);
