@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 
 public class FirebaseUtils {
@@ -243,7 +244,8 @@ public class FirebaseUtils {
     }
 
     private static String toISOString(Barcode.CalendarDateTime date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z");
-        return dateFormat.format(date);
+        return String.format(Locale.getDefault(), "%d-%02d-%02d'T'%02d:%02d:%02d'Z'",
+                date.getYear(), date.getMonth() , date.getDay(),
+                date.getHours() , date.getMinutes() , date.getSeconds());
     }
 }
