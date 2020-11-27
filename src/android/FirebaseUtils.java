@@ -244,7 +244,7 @@ public class FirebaseUtils {
     }
 
     private static String toISOString(Barcode.CalendarDateTime date) {
-        return String.format(Locale.getDefault(), "%d-%02d-%02d'T'%02d:%02d:%02d'Z'",
+        return String.format(Locale.getDefault(), "%d-%02d-%02dT%02d:%02d:%02dZ",
                 date.getYear(), date.getMonth() , date.getDay(),
                 date.getHours() , date.getMinutes() , date.getSeconds());
     }
