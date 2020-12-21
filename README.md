@@ -17,13 +17,12 @@ cordova plugin add cordova-plugin-firebase-mlvision --save
 ```js
 //FILE_URI: File URI or Base64 Format
 FirebaseVisionPlugin.onDeviceTextRecognizer(FILE_URI,
-    (text) => {
-        console.log(text);
+    (json) => {
+        console.log(json);
     },
     (error) => {
-        console.error(error);;
-    })
-})
+        console.error(error);
+    });
 ```
 
 ## Barcode detector
@@ -34,9 +33,8 @@ FirebaseVisionPlugin.barcodeDetector(FILE_URI,
         console.log(json);
     },
     (error) => {
-        console.error(error);;
-    })
-})
+        console.error(error);
+    });
 ```
 
 ## Image Labeler
@@ -47,9 +45,8 @@ FirebaseVisionPlugin.imageLabeler(FILE_URI,
         console.log(json);
     },
     (error) => {
-        console.error(error);;
-    })
-})
+        console.error(error);
+    });
 ```
 
 # Support
